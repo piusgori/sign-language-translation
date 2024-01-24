@@ -7,7 +7,7 @@ node_modules
 
 # Expo
 .expo/
-dist/
+/client/dist
 web-build/
 
 # Native
