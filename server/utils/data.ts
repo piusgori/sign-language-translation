@@ -1,0 +1,1 @@
+export const tokenExpiry = 60 * 60;
