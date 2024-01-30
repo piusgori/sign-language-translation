@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "320953253898",
+    "project_id": "sign-language-translation-org",
+    "storage_bucket": "sign-language-translation-org.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320953253898:android:38cc178d460fc10c7bdff3",
+        "android_client_info": {
+          "package_name": "com.signlanguagetranslation.slt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_DN_aCr74Ry49opZX-TOyAr2Y63DI2Cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

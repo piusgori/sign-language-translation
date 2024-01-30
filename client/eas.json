@@ -1,0 +1,28 @@
+{
+  "cli": {
+    "version": ">= 5.9.3"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app"
+      }
+    },
+    "production": {
+      "env": {
+        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

@@ -9,7 +9,7 @@ const userSchema = new Schema({
     role: { type: String, default: 'user' },
     googleId: { type: String, content: Schema.Types.Mixed },
     photoURL: { type: String, content: Schema.Types.Mixed },
-    password: { type: String, required: true },
+    password: { type: String, content: Schema.Types.Mixed },
     disabled: { type: Boolean, default: false }
 }, { timestamps: true });
 

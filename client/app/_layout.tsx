@@ -1,19 +1,25 @@
-import { View, Text, useColorScheme } from 'react-native'
 import React from 'react'
-import { Slot } from 'expo-router'
+import { Stack } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
+import AuthContextProvider from '@/auth/auth-context'
+import PaperProvider from '@/utils/theme'
+import { KeyboardAvoidingView } from 'react-native'
 
 const MainLayout = () => {
 
-    const colorScheme = useColorScheme();
-
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'} />
-        <Slot />
-    </SafeAreaView>
+    <AuthContextProvider>
+      <PaperProvider>
+        <StatusBar style='dark' />
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', padding: 16 }}>
+            <KeyboardAvoidingView style={{ flex: 1 }}>
+              <Stack screenOptions={{ headerShown: false }} />
+            </KeyboardAvoidingView>
+        </SafeAreaView>
+      </PaperProvider>
+    </AuthContextProvider>
   )
 }
 
-export default MainLayout
+export default MainLayout;

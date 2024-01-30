@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { body } from 'express-validator';
 
-import { getProfileDetails, login, register } from "../controllers/auth";
+import { getProfileDetails, googleLogin, googleRegister, login, register } from "../controllers/auth";
 import accessToken from "../middleware/access-token";
 
 const authRouter = Router();
@@ -13,7 +13,11 @@ authRouter.post('/register', [
     body('password').isLength({ min: 1 }).withMessage('Password is required'),
 ], register);
 
+authRouter.post('/google-register', googleRegister);
+
 authRouter.post('/login', login);
+
+authRouter.post('/google-login', googleLogin);
 
 authRouter.get('/profile', accessToken, getProfileDetails);
 
