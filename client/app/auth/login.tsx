@@ -34,7 +34,6 @@ const LoginPage = () => {
     try {
       await login(data);
     } catch (error: any) {
-      console.log(error);
       ToastAndroid.show(error, ToastAndroid.LONG)
     }
   }
@@ -44,7 +43,7 @@ const LoginPage = () => {
       <ScrollView contentContainerStyle={styles.container}>
 
         <View style={styles.eachContainer}>
-          <Text variant='headlineSmall'>REGISTER</Text>
+          <Text variant='headlineSmall'>LOGIN</Text>
           <Image style={{ height: 100, width: 100 }} alt='Logo' source={require('@/assets/images/logo-trans.png')} />
         </View>
 
@@ -53,7 +52,7 @@ const LoginPage = () => {
           <RHFTextField label='Password' name='password' placeholder='Password' autoCapitalize='none' secureTextEntry={!showPassword} right={<TextInput.Icon onPress={() => { setShowPassword(prev => !prev) }} icon={showPassword ? 'eye-off' : 'eye'} />} />
           <Button mode='contained' style={{ borderRadius: 4, width: '100%' }} onPress={handleSubmit(onSubmit)} loading={isSubmitting}>Login</Button>
           <Text>Or</Text>
-          <SocialAuth />
+          <SocialAuth method='Login' />
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
             <Text>Don't Have An Account?</Text>
             <Button onPress={() => { router.push('/auth/register') }}>Create Account</Button>

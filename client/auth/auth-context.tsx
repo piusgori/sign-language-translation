@@ -8,7 +8,9 @@ const AuthContext = createContext({
     isAuthenticated: false,
     user: null as any | null,
     login: async (data: any) => { console.log(data) },
+    googleLogin: async (data: any) => { console.log(data) },
     register: async (data: any) => { console.log(data) },
+    googleRegister: async (data: any) => { console.log(data) },
     logout: () => {},
     update: (data: any) => { console.log(data) },
 });
@@ -109,8 +111,22 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
         dispatch({ type: dispatchActionTypes.LOGIN, payload: { user } });
     }, []);
 
+    const googleLogin = useCallback(async (data: any) => {
+        const response = await axiosInstance.post('/auth/google-login', data);
+        const { user, accessToken } = response.data;
+        await setSession(accessToken);
+        dispatch({ type: dispatchActionTypes.LOGIN, payload: { user } });
+    }, []);
+
     const register = useCallback(async (data: any) => {
         const response = await axiosInstance.post('/auth/register', data);
+        const { user, accessToken } = response.data;
+        await setSession(accessToken);
+        dispatch({ type: dispatchActionTypes.REGISTER, payload: { user: { ...user, credit: 10 } } });
+    }, []);
+
+    const googleRegister = useCallback(async (data: any) => {
+        const response = await axiosInstance.post('/auth/google-register', data);
         const { user, accessToken } = response.data;
         await setSession(accessToken);
         dispatch({ type: dispatchActionTypes.REGISTER, payload: { user: { ...user, credit: 10 } } });
@@ -121,8 +137,8 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
     }, []);
     
     const logout = useCallback(async () => {
-        await setSession(null);
         dispatch({ type: dispatchActionTypes.LOGOUT });
+        await setSession(null);
     }, []);
 
     const value = useMemo(() => ({
@@ -130,10 +146,12 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
         isAuthenticated: state.isAuthenticated,
         user: state.user,
         login,
+        googleLogin,
         register,
+        googleRegister,
         logout,
         update,
-    }), [state.isAuthenticated, state.isInitialized, state.user, login, logout, register, update]);
+    }), [state.isAuthenticated, state.isInitialized, state.user, login, logout, register, googleLogin, googleRegister, update]);
 
     return <AuthContext.Provider value={value} >{children}</AuthContext.Provider>
 }

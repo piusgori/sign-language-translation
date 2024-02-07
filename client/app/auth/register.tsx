@@ -63,7 +63,7 @@ const RegisterPage = () => {
           <RHFTextField label='Confirm Password' name='passwordConfirm' placeholder='Confirm Password' autoCapitalize='none' secureTextEntry={!showPassword} right={<TextInput.Icon onPress={() => { setShowPassword(prev => !prev) }} icon={showPassword ? 'eye-off' : 'eye'} />} />
           <Button mode='contained' style={{ borderRadius: 4, width: '100%' }} onPress={handleSubmit(onSubmit)} loading={isSubmitting}>Create Account</Button>
           <Text>Or</Text>
-          <SocialAuth />
+          <SocialAuth method='Register' />
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
             <Text>Already Have An Account?</Text>
             <Button onPress={() => { router.push('/auth/login') }}>Login</Button>

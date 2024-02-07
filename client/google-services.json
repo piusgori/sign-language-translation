@@ -7,12 +7,21 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:320953253898:android:38cc178d460fc10c7bdff3",
+        "mobilesdk_app_id": "1:320953253898:android:db11d25f629d8f807bdff3",
         "android_client_info": {
           "package_name": "com.signlanguagetranslation.slt"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "320953253898-j9cb1mp8akor7q3ntt8o4m06gfjcdm5n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.signlanguagetranslation.slt",
+            "certificate_hash": "6107c6bd2aaf5260f852da792f58b65fe79854f0"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA_DN_aCr74Ry49opZX-TOyAr2Y63DI2Cs"

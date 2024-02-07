@@ -7,10 +7,9 @@ import { StatusBar } from 'expo-status-bar'
 const AuthLayout = () => {
   return (
     <GuestGuard>
-      <StatusBar style='auto' backgroundColor='white' />
-        <View style={{ flex: 1, backgroundColor: 'white', padding: 24 }}>
-            <Slot />
-        </View>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+          <Slot />
+      </View>
     </GuestGuard>
   )
 }
