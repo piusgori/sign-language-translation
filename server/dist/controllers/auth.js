@@ -48,11 +48,11 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 exports.register = register;
 const googleRegister = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { given_name, family_name, email, googleId } = req.body;
+        const { given_name, family_name, email, googleId, photoURL } = req.body;
         const foundUser = yield user_1.default.findOne({ email });
         if (foundUser)
             return next(new http_error_1.default("Email Error", "Email Address Is Already In Use", 422));
-        const newUser = new user_1.default({ firstName: given_name, lastName: family_name, email, googleId: googleId, });
+        const newUser = new user_1.default({ firstName: given_name, lastName: family_name, email, googleId: googleId, photoURL });
         yield newUser.save();
         const foundProfile = yield user_1.default.findById(newUser._id, { password: 0, googleId: 0 });
         const token = jsonwebtoken_1.default.sign({ _id: foundProfile === null || foundProfile === void 0 ? void 0 : foundProfile._id, email }, process.env.TOKEN_SECRET, { expiresIn: data_1.tokenExpiry });
@@ -111,6 +111,7 @@ const getProfileDetails = (req, res, next) => __awaiter(void 0, void 0, void 0, 
 });
 exports.getProfileDetails = getProfileDetails;
 const updateProfileDetails = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     try {
         const { firstName, lastName, email, photoURL, disabled } = req.body;
         const errors = (0, express_validator_1.validationResult)(req);
@@ -119,7 +120,7 @@ const updateProfileDetails = (req, res, next) => __awaiter(void 0, void 0, void 
             return next(new http_error_1.default('Validation error', errorArray[0].msg, 422));
         }
         ;
-        if (req.user.googleId && email !== req.user.email)
+        if (((_a = req === null || req === void 0 ? void 0 : req.user) === null || _a === void 0 ? void 0 : _a.googleId) && email !== ((_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b.email))
             return next(new http_error_1.default('Validation error', 'Your authentication method does not allow you to change your email address', 422));
         const emailExists = yield (0, check_unique_credentials_1.checkEmail)(email, req.id);
         if (emailExists)
@@ -129,6 +130,7 @@ const updateProfileDetails = (req, res, next) => __awaiter(void 0, void 0, void 
     }
     catch (err) {
         console.log(err);
+        return next(new http_error_1.default('Unable to update profile details'));
     }
 });
 exports.updateProfileDetails = updateProfileDetails;

@@ -12,7 +12,7 @@ export default async function accessToken (req: TokenRequest, res: Response, nex
         const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET as Secret) as any;
         const id = decodedToken?._id.trim();
         let foundUser;
-        foundUser = await User.findById(id, { password: 0, googleId: 0 }) as any;
+        foundUser = await User.findById(id, { password: 0 }) as any;
         const foundProfile = foundUser
         if (!foundProfile) return next(new HttpError('Access token error', 'Invalid or expired access token', 403));
         req.id = id;

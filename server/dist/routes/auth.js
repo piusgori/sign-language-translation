@@ -18,9 +18,9 @@ authRouter.post('/google-register', auth_1.googleRegister);
 authRouter.post('/login', auth_1.login);
 authRouter.post('/google-login', auth_1.googleLogin);
 authRouter.get('/profile', access_token_1.default, auth_1.getProfileDetails);
-authRouter.patch('/update-profile', [
+authRouter.patch('/update-profile', access_token_1.default, [
     (0, express_validator_1.body)('firstName').isLength({ min: 1 }).withMessage('First name is required'),
     (0, express_validator_1.body)('lastName').isLength({ min: 1 }).withMessage('Last name is required'),
     (0, express_validator_1.body)('email').isLength({ min: 1 }).isEmail().withMessage('Email address is required'),
-], auth_1.register);
+], auth_1.updateProfileDetails);
 exports.default = authRouter;

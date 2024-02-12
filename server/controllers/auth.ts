@@ -34,10 +34,10 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
 export const googleRegister = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const { given_name, family_name, email, googleId } = req.body;
+		const { given_name, family_name, email, googleId, photoURL } = req.body;
 		const foundUser = await User.findOne({ email });
 		if (foundUser) return next(new HttpError("Email Error", "Email Address Is Already In Use", 422));
-		const newUser = new User({ firstName: given_name, lastName: family_name, email, googleId: googleId, });
+		const newUser = new User({ firstName: given_name, lastName: family_name, email, googleId: googleId, photoURL });
         await newUser.save();
 		const foundProfile: any = await User.findById(newUser._id, { password: 0, googleId: 0 });
 		const token = jwt.sign({ _id: foundProfile?._id, email }, process.env.TOKEN_SECRET as Secret, { expiresIn: tokenExpiry });
@@ -96,12 +96,13 @@ export const updateProfileDetails = async (req: TokenRequest, res: Response, nex
             const errorArray = errors.array();
             return next(new HttpError('Validation error', errorArray[0].msg, 422))
         };
-        if (req.user.googleId && email !== req.user.email) return next(new HttpError('Validation error', 'Your authentication method does not allow you to change your email address', 422));
+        if (req?.user?.googleId && email !== req?.user?.email) return next(new HttpError('Validation error', 'Your authentication method does not allow you to change your email address', 422));
         const emailExists = await checkEmail(email, req.id);
         if (emailExists) return next(new HttpError('Validation error', 'Email address already exists', 422));
         await User.updateOne({ _id: req.id }, { $set: { firstName, lastName, email, photoURL, disabled } });
         res.status(200).json({ message: 'Profile details updated successfully' });
     } catch (err) {
         console.log(err);
+        return next(new HttpError('Unable to update profile details'))
     } 
 }

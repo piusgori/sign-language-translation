@@ -25,7 +25,7 @@ function accessToken(req, res, next) {
             const decodedToken = jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET);
             const id = decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken._id.trim();
             let foundUser;
-            foundUser = (yield user_1.default.findById(id, { password: 0, googleId: 0 }));
+            foundUser = (yield user_1.default.findById(id, { password: 0 }));
             const foundProfile = foundUser;
             if (!foundProfile)
                 return next(new http_error_1.default('Access token error', 'Invalid or expired access token', 403));

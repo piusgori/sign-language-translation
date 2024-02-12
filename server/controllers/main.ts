@@ -27,8 +27,22 @@ export const searchUser = async (req: TokenRequest, res: Response, next: NextFun
 
 export const getChats = async (req: TokenRequest, res: Response, next: NextFunction) => {
     try {
-        const foundChats = await Chat.find({ $or: [{ userOne: req.id }, { userTwo: req.id }] });
-        res.status(200).json({ message: 'Chats found', chats: foundChats });
+        const foundChats = await Chat.find({ $or: [{ userOne: req.id }, { userTwo: req.id }] }).sort({ 'lastMessage.createdAt': -1 });
+        const oneUsers = foundChats.map(each => each.userOne);
+        const twoUsers = foundChats.map(each => each.userTwo);
+        const theUsers = await User.find({
+           $or: [
+                { _id: { $in: oneUsers } },
+                { _id: { $in: twoUsers } },
+            ]
+        }, { password: 0, googleId: 0 });
+        const mappedChats = foundChats.map((ch: any) => {
+            const foundUserOne: any = theUsers.find((user) => user._id.toString() === ch.userOne.toString());
+            const foundUserTwo: any = theUsers.find((user) => user._id.toString() === ch.userTwo.toString());
+            const returnedChat = { ...ch?._doc, userOne: foundUserOne?._doc, userTwo: foundUserTwo?._doc };
+            return returnedChat;
+        })
+        res.status(200).json({ message: 'Chats found', chats: mappedChats });
     } catch (err) {
         console.log(err);
         return next(new HttpError('Unable to get chats'));
@@ -55,13 +69,14 @@ export const sendMessage = async (req: TokenRequest, res: Response, next: NextFu
             currentChat = new Chat({
                 userOne: req.id,
                 userTwo: to,
+                lastMessage: newMessage,
                 messages: [newMessage],
             });
             await currentChat.save();
         } else if (foundChat) {
             //  add new message to existing chat
             currentChat = foundChat;
-            await Chat.updateOne({ _id: foundChat._id }, { $addToSet: { messages: newMessage } });
+            await Chat.updateOne({ _id: foundChat._id }, { $addToSet: { messages: newMessage }, $set: { lastMessage: newMessage } });
         }
         res.status(200).json({ message: 'Message has been sent' });
     } catch (err) {

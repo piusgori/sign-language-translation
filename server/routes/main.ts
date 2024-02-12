@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { main, searchUser, sendMessage } from "../controllers/main";
+import { getChats, main, searchUser, sendMessage } from "../controllers/main";
 import authRouter from "./auth";
 import accessToken from "../middleware/access-token";
 
@@ -10,6 +10,8 @@ mainRouter.get('/', main);
 mainRouter.use('/auth', authRouter);
 
 mainRouter.get('/search-user', accessToken, searchUser);
+
+mainRouter.get('/chats', accessToken, getChats)
 
 mainRouter.post('/send-message', accessToken, sendMessage);
 
