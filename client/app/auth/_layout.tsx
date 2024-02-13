@@ -3,13 +3,16 @@ import React from 'react'
 import GuestGuard from '../../auth/GuestGuard'
 import { Slot } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const AuthLayout = () => {
   return (
     <GuestGuard>
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-          <Slot />
-      </View>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', paddingHorizontal: 16, paddingVertical: 10 }}>
+        <View style={{ flex: 1 }}>
+            <Slot />
+        </View>
+      </SafeAreaView>
     </GuestGuard>
   )
 }

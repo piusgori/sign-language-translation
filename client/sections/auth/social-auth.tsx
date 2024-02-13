@@ -23,7 +23,7 @@ const SocialAuth = ({ method }: { method: 'Register' | 'Login' }) => {
         }
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
         const userInfo = await GoogleSignin.signIn();
-        const authUser = { given_name: userInfo.user.givenName, family_name: userInfo.user.familyName, email: userInfo.user.email, googleId: userInfo.user.id }
+        const authUser = { given_name: userInfo.user.givenName, family_name: userInfo.user.familyName, email: userInfo.user.email, googleId: userInfo.user.id, photoURL: userInfo.user.photo }
         if (method === 'Login') await googleLogin(authUser);
         else if (method === 'Register') await googleRegister(authUser);
     } catch (error: any) {

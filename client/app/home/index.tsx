@@ -1,16 +1,15 @@
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
-import { Button } from 'react-native-paper'
-import { useAuthContext } from '@/auth/auth-context'
+import { Button, Text } from 'react-native-paper'
 
 const HomeScreen = () => {
 
-  const { logout } = useAuthContext();
-
   return (
     <View style={{ gap: 16, backgroundColor: '#fff', flex: 1 }}>
-      <Text>Welcome</Text>
-      <Button mode='contained' onPress={logout}>Logout</Button>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+        <Text variant='headlineSmall' style={{ fontWeight: 'bold' }}>Your Communications</Text>
+        <Button icon='chat-plus' mode='contained-tonal'>Start</Button>
+      </View>
     </View>
   )
 }

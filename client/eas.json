@@ -7,18 +7,39 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app"
+        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyB5oHccFPho2osHwLbpqI0H4gylpSMDNpc",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "sign-language-translation-org.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "sign-language-translation-org",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "sign-language-translation-org.appspot.com",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "320953253898",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:320953253898:web:e7568fc5094723e57bdff3",
+        "EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-DYWB77TBK6"
       }
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app"
+        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyB5oHccFPho2osHwLbpqI0H4gylpSMDNpc",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "sign-language-translation-org.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "sign-language-translation-org",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "sign-language-translation-org.appspot.com",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "320953253898",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:320953253898:web:e7568fc5094723e57bdff3",
+        "EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-DYWB77TBK6"
       }
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app"
+        "EXPO_PUBLIC_SERVER_URL": "https://sign-language-translation.vercel.app",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyB5oHccFPho2osHwLbpqI0H4gylpSMDNpc",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN": "sign-language-translation-org.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "sign-language-translation-org",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET": "sign-language-translation-org.appspot.com",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID": "320953253898",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:320953253898:web:e7568fc5094723e57bdff3",
+        "EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID": "G-DYWB77TBK6"
       }
     }
   },

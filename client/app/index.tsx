@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 16,
         backgroundColor: '#fff',
+        padding: 16,
     },
 
     bottomContainer: {
