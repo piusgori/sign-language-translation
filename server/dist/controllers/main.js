@@ -12,10 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendMessage = exports.getChats = exports.searchUser = exports.main = void 0;
+exports.notifications = exports.addRequest = exports.learning = exports.sendMessage = exports.getChats = exports.searchUser = exports.main = void 0;
 const http_error_1 = __importDefault(require("../models/http-error"));
 const user_1 = __importDefault(require("../models/user"));
 const chat_1 = __importDefault(require("../models/chat"));
+const item_1 = __importDefault(require("../models/item"));
+const express_validator_1 = require("express-validator");
+const notification_1 = __importDefault(require("../models/notification"));
 const main = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         res.status(200).json({ message: 'Sign language translation' });
@@ -101,3 +104,51 @@ const sendMessage = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.sendMessage = sendMessage;
+const learning = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const items = yield item_1.default.find({ approved: true }).sort({ createdAt: -1 });
+        res.status(200).json({ message: 'Items', items });
+        const itemIds = items.map(item => item._id);
+        yield item_1.default.updateMany({ _id: { $in: itemIds } }, { $addToSet: { views: req.id } });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to get learning items'));
+    }
+});
+exports.learning = learning;
+function addRequest(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { image, meaning } = req.body;
+            const errors = (0, express_validator_1.validationResult)(req);
+            if (!errors.isEmpty()) {
+                const errorArray = errors.array();
+                return next(new http_error_1.default('Validation Error', errorArray[0].msg, 422));
+            }
+            ;
+            const createdItem = { image, meaning, approved: false, requestUser: req.id };
+            const newItem = new item_1.default(createdItem);
+            yield newItem.save();
+            res.status(200).json({ message: 'Item created', item: newItem['_doc'] });
+        }
+        catch (err) {
+            console.log(err);
+            return next(new http_error_1.default('Unable to add item'));
+        }
+    });
+}
+exports.addRequest = addRequest;
+const notifications = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const notifications = yield notification_1.default.find({ user: req.id }).sort({ createdAt: -1 });
+        res.status(200).json({ message: 'Notifications', notifications });
+        const notIds = notifications.filter(each => !each.read).map(item => item._id);
+        yield notification_1.default.updateMany({ _id: { $in: notIds } }, { $set: { read: true } });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to get learning items'));
+    }
+});
+exports.notifications = notifications;

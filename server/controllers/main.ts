@@ -3,6 +3,9 @@ import HttpError from "../models/http-error";
 import { TokenRequest } from "../types";
 import User from "../models/user";
 import Chat from "../models/chat";
+import Item from "../models/item";
+import { validationResult } from "express-validator";
+import Notification from "../models/notification";
 
 export const main = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -82,5 +85,47 @@ export const sendMessage = async (req: TokenRequest, res: Response, next: NextFu
     } catch (err) {
         console.log(err);
         return next(new HttpError('Unable to send message'));
+    }
+}
+
+export const learning = async (req: TokenRequest, res: Response, next: NextFunction) => {
+    try {
+        const items = await Item.find({ approved: true }).sort({ createdAt: -1 });
+        res.status(200).json({ message: 'Items', items });
+        const itemIds = items.map(item => item._id);
+        await Item.updateMany({ _id: { $in: itemIds } }, { $addToSet: { views: req.id } })
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to get learning items'));
+    }
+}
+
+export async function addRequest(req: TokenRequest, res: Response, next: NextFunction) {
+    try {
+        const { image, meaning } = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const errorArray = errors.array();
+            return next(new HttpError('Validation Error', errorArray[0].msg, 422));
+        };
+        const createdItem = { image, meaning, approved: false, requestUser: req.id } as any;
+        const newItem = new Item(createdItem) as any;
+        await newItem.save();
+        res.status(200).json({ message: 'Item created', item: newItem['_doc'] })
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to add item'));
+    }
+}
+
+export const notifications = async (req: TokenRequest, res: Response, next: NextFunction) => {
+    try {
+        const notifications = await Notification.find({ user: req.id }).sort({ createdAt: -1 });
+        res.status(200).json({ message: 'Notifications', notifications });
+        const notIds = notifications.filter(each => !each.read).map(item => item._id);
+        await Notification.updateMany({ _id: { $in: notIds } }, { $set: { read: true } })
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to get learning items'));
     }
 }

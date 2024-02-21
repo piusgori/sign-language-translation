@@ -110,7 +110,7 @@ const ProfileScreen = () => {
                 <RHFTextField label='First Name' name='firstName' placeholder='First Name' autoCapitalize='words' />
                 <RHFTextField label='Last Name' name='lastName' placeholder='Last Name' autoCapitalize='words' />
                 <RHFTextField label='Email Address' name='email' placeholder='Email Address' autoCapitalize='none' keyboardType='email-address' />
-                <RHFCheckBox label='Are you disabled?' name='disabled' />
+                <RHFCheckBox label='Please check here if you have a hearing or listening impairement?' name='disabled' />
                 <Button loading={isSubmitting} mode='contained' onPress={handleSubmit(onSubmit)}>Save Details</Button>
             </View>
         </ScrollView>

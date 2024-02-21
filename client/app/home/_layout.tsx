@@ -4,7 +4,7 @@ import { Tabs, useRouter } from 'expo-router'
 import { Avatar } from 'react-native-paper'
 import { TouchableOpacity, View } from 'react-native'
 import { useAuthContext } from '@/auth/auth-context'
-import { PRIMARY_MAIN } from '@/config'
+import { DEFAULT_PROFILE, PRIMARY_MAIN } from '@/config'
 import { Ionicons } from '@expo/vector-icons';
 
 const HomeLayout = () => {
@@ -20,7 +20,7 @@ const HomeLayout = () => {
                         elevation: 0
                     },
                     headerRight: () => <TouchableOpacity onPress={() => { router.push('/profile/') }}>
-                        <Avatar.Image size={40} source={{ uri: user?.photoURL }} />
+                        <Avatar.Image size={40} source={{ uri: user?.photoURL || DEFAULT_PROFILE }} />
                     </TouchableOpacity>,
                     tabBarActiveTintColor: PRIMARY_MAIN,
                     headerTitle: '',
