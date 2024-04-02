@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, ToastAndroid, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { Avatar, Button, IconButton, Text } from 'react-native-paper';
+import { Avatar, Badge, Button, IconButton, Text } from 'react-native-paper';
 import { useAuthContext } from '@/auth/auth-context';
 import { DEFAULT_PROFILE, PRIMARY_MAIN } from '@/config';
 import * as Yup from 'yup';
@@ -14,10 +14,15 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from '@/utils/firebase';
 import uuid from 'react-native-uuid';
 import axiosInstance from '@/utils/axios';
+import { useRouter } from 'expo-router';
+import { useAppContext } from '@/services/app-context';
 
 const ProfileScreen = () => {
 
     const { user, update, logout } = useAuthContext();
+    const { notifications } = useAppContext();
+
+    const { push } = useRouter();
 
     const UserSchema = Yup.object().shape({
         firstName: Yup.string().required('First Name Is Required'),
@@ -70,7 +75,7 @@ const ProfileScreen = () => {
             update(submitForm);
             ToastAndroid.show('Your Profile Details Have Been Saved', ToastAndroid.LONG)
         } catch (error: any) {
-          ToastAndroid.show(error, ToastAndroid.LONG)
+            ToastAndroid.show(error, ToastAndroid.LONG)
         }
       }
 
@@ -86,7 +91,24 @@ const ProfileScreen = () => {
     <FormProvider methods={methods}>
         <ScrollView contentContainerStyle={{ gap: 20, alignItems: 'center' }}>
             <View style={{ width: '100%', flexDirection: 'row', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
-                <View />
+                {notifications.length > 0 && notifications.find(each => !each.read) ? 
+                <View>
+                    <IconButton
+                        icon='bell'
+                        iconColor={PRIMARY_MAIN}
+                        mode='contained'
+                        onPress={() => { push('/profile/notifications') }}
+                    />
+                    <Badge style={{ position: 'absolute', top: 0 }}>{notifications.filter(e => e.read).length}</Badge>
+                </View>
+                :
+                <IconButton
+                    icon='bell'
+                    iconColor={PRIMARY_MAIN}
+                    mode='contained'
+                    onPress={() => { push('/profile/notifications') }}
+                />
+                }
                 <Text variant='headlineSmall' style={{ marginLeft: 50 }}>Your Profile</Text>
                 <IconButton
                     icon='logout'

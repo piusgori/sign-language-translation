@@ -2,7 +2,7 @@ import { ReactNode, createContext, useContext, useEffect, useMemo, useRef, useSt
 import axiosInstance from "../utils/axios";
 import { useAuthContext } from "../auth/auth-context";
 import uuid from 'react-native-uuid';
-import { CHAT } from "@/utils/types";
+import { CHAT, NOTIFICATION } from "@/utils/types";
 import { ToastAndroid } from "react-native";
 
 const AppContext = createContext({
@@ -11,11 +11,14 @@ const AppContext = createContext({
   messageInput: '',
   selectedUser: null as string | null,
   chats: [] as CHAT[],
+  notifications: [] as NOTIFICATION[],
+  isGettingNotifications: false,
   setMessageInput: (_: string) => {},
   selectChatHandler: (_: string) => {},
   unselectChat: () => {},
   sendMessage: () => {},
   refreshHandler: () => {},
+  getNotificationsHandler: () => {},
 });
 
 export const useAppContext = () => {
@@ -33,7 +36,20 @@ export default function AppContextProvider ({ children }: { children: ReactNode 
     const [isUpdating, setIsUpdating] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
     const [chats, setChats] = useState<CHAT[]>([]);
+    const [notifications, setNotifications] = useState<NOTIFICATION[]>([]);
+    const [isGettingNotifications, setIsGettingNotifications] = useState<boolean>(false);
 
+    const getNotificationsHandler = async () => {
+      try {
+        setIsGettingNotifications(true);
+        const { data } = await axiosInstance.get('/notifications');
+        setNotifications(data.notifications);
+      } catch (err: any) {
+        ToastAndroid.show(err, ToastAndroid.SHORT)
+      } finally {
+        setIsGettingNotifications(false);
+      }
+    }
 
     const getChatsHandler = async () => {
       try {
@@ -67,7 +83,8 @@ export default function AppContextProvider ({ children }: { children: ReactNode 
     const initialization = async () => {
       try {
         setIsLoading(true);
-        await getChatsHandler()
+        await getChatsHandler();
+        await getNotificationsHandler();
         setIsLoading(false);
       } catch (err: any) {
         console.log(err);
@@ -117,6 +134,9 @@ export default function AppContextProvider ({ children }: { children: ReactNode 
       sendMessage,
       refreshHandler,
       isRefreshing,
+      isGettingNotifications,
+      getNotificationsHandler,
+      notifications,
     }), [
       isLoading,
       messageInput,
@@ -128,6 +148,9 @@ export default function AppContextProvider ({ children }: { children: ReactNode 
       sendMessage,
       refreshHandler,
       isRefreshing,
+      isGettingNotifications,
+      getNotificationsHandler,
+      notifications,
     ]);
 
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>

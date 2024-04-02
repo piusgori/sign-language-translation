@@ -3,8 +3,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { View } from 'react-native';
 import { Button, IconButton, Modal, Portal, Text } from 'react-native-paper';
 import * as tf from '@tensorflow/tfjs';
-import '@tensorflow/tfjs-react-native';
+import { bundleResourceIO, decodeJpeg } from '@tensorflow/tfjs-react-native';
+import * as modelWeights from '../../assets/item.bin'
 
+const modelJSON = require('../../assets/model.json');
 
 interface CC {
     open: boolean;
@@ -42,10 +44,14 @@ const ChatCamera = ({ closeCamera, open }: CC) => {
       };
 
     const loadModel = async () => {
-        await tf.ready();
-        const model = await tf.loadGraphModel('assets/model.json');
-        modelRef.current = model;
-        detectObjects()
+        try {
+            // await tf.ready();
+            // const model = await tf.loadLayersModel(bundleResourceIO(modelJSON, modelWeights));
+            // console.log(model);
+            // return model;
+        } catch (err: any) {
+            console.error('Error:', err?.message || err);
+        }
     }
 
     const takePicture = async () => {
