@@ -12,11 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.approveItem = exports.requests = exports.deleteItem = exports.editItem = exports.addItem = void 0;
+exports.addQuiz = exports.addLesson = exports.createTopic = exports.approveItem = exports.requests = exports.deleteItem = exports.editItem = exports.addItem = void 0;
 const express_validator_1 = require("express-validator");
 const http_error_1 = __importDefault(require("../../models/http-error"));
 const item_1 = __importDefault(require("../../models/item"));
 const notification_1 = __importDefault(require("../../models/notification"));
+const topic_1 = __importDefault(require("../../models/topic"));
+const lesson_1 = __importDefault(require("../../models/lesson"));
+const question_1 = __importDefault(require("../../models/question"));
 function addItem(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -118,3 +121,56 @@ function approveItem(req, res, next) {
     });
 }
 exports.approveItem = approveItem;
+const createTopic = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { title, description, objectives } = req.body;
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            const errorArray = errors.array();
+            return next(new http_error_1.default('Validation error', errorArray[0].msg, 422));
+        }
+        const newTopic = yield topic_1.default.create({ title, description, objectives });
+        res.status(200).json({ message: 'Topic created', topic: newTopic === null || newTopic === void 0 ? void 0 : newTopic._doc });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to create topic'));
+    }
+});
+exports.createTopic = createTopic;
+const addLesson = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { topic, title, content, url } = req.body;
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            const errorArray = errors.array();
+            return next(new http_error_1.default('Validation Error', errorArray[0].msg, 422));
+        }
+        ;
+        const newLesson = yield lesson_1.default.create({ title, content, url, topic });
+        res.status(200).json({ message: 'Lesson Added' });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to add lesson'));
+    }
+});
+exports.addLesson = addLesson;
+const addQuiz = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { topic, text, options, correctAnswer } = req.body;
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            const errorArray = errors.array();
+            return next(new http_error_1.default('Validation Error', errorArray[0].msg, 422));
+        }
+        ;
+        const newQuestion = yield question_1.default.create({ text, options, correctAnswer, topic });
+        res.status(200).json({ message: 'Question Added' });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to add question'));
+    }
+});
+exports.addQuiz = addQuiz;

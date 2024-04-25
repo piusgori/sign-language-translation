@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addRequest, getChats, learning, main, notifications, searchUser, sendMessage } from "../controllers/main";
+import { addRequest, answerQuestion, completeTopic, getChats, learning, learnLesson, main, notifications, searchUser, sendMessage, singleTopic, topics } from "../controllers/main";
 import authRouter from "./auth";
 import accessToken from "../middleware/access-token";
 import adminMainRouter from "./admin";
@@ -27,5 +27,15 @@ mainRouter.post('/add-request', accessToken, [
 ], addRequest);
 
 mainRouter.get('/notifications', accessToken, notifications);
+
+mainRouter.get('/topics', accessToken, topics);
+
+mainRouter.get('/single-topic', accessToken, singleTopic);
+
+mainRouter.post('/learn-lesson', accessToken, learnLesson);
+
+mainRouter.post('/answer-question', accessToken, answerQuestion);
+
+mainRouter.post('/complete-topic', accessToken, completeTopic);
 
 export default mainRouter;

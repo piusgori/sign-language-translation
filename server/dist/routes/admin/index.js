@@ -25,4 +25,15 @@ adminMainRouter.get('/requests', access_token_1.default, admin_access_token_1.de
 adminMainRouter.patch('/approve-item', access_token_1.default, admin_access_token_1.default, [
     (0, express_validator_1.body)('itemId').isLength({ min: 1 }).withMessage('Please select an item'),
 ], admin_1.approveItem);
+adminMainRouter.post('/create-topic', access_token_1.default, admin_access_token_1.default, [
+    (0, express_validator_1.body)('title').isLength({ min: 1 }).withMessage('Topic title is required'),
+], admin_1.createTopic);
+adminMainRouter.post('/add-lesson', access_token_1.default, admin_access_token_1.default, [
+    (0, express_validator_1.body)('topic').isLength({ min: 1 }).withMessage('Please select a topic'),
+    (0, express_validator_1.body)('title').isLength({ min: 1 }).withMessage('Lesson title is required'),
+], admin_1.addLesson);
+adminMainRouter.post('/add-quiz', access_token_1.default, admin_access_token_1.default, [
+    (0, express_validator_1.body)('topic').isLength({ min: 1 }).withMessage('Please select a topic'),
+    (0, express_validator_1.body)('text').isLength({ min: 1 }).withMessage('Question is required'),
+], admin_1.addQuiz);
 exports.default = adminMainRouter;

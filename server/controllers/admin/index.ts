@@ -4,6 +4,9 @@ import { validationResult } from "express-validator";
 import HttpError from "../../models/http-error";
 import Item from "../../models/item";
 import Notification from "../../models/notification";
+import Topic from "../../models/topic";
+import Lesson from "../../models/lesson";
+import Question from "../../models/question";
 
 export async function addItem(req: TokenRequest, res: Response, next: NextFunction) {
     try {
@@ -82,5 +85,53 @@ export async function approveItem(req: TokenRequest, res: Response, next: NextFu
     } catch (err) {
         console.log(err);
         return next(new HttpError('Unable to approve Item'));
+    }
+}
+
+export const createTopic = async (req: TokenRequest, res: Response, next: NextFunction) => {
+    try {
+        const { title, description, objectives } = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const errorArray = errors.array();
+            return next(new HttpError('Validation error', errorArray[0].msg, 422));
+        }
+        const newTopic: any = await Topic.create({ title, description, objectives });
+        res.status(200).json({ message: 'Topic created', topic: newTopic?._doc })
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to create topic'))
+    }
+}
+
+export const addLesson = async (req: TokenRequest, res: Response, next: NextFunction) => {
+    try {
+        const { topic, title, content, url } = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const errorArray = errors.array();
+            return next(new HttpError('Validation Error', errorArray[0].msg, 422));
+        };
+        const newLesson = await Lesson.create({ title, content, url, topic });
+        res.status(200).json({ message: 'Lesson Added' });
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to add lesson'))
+    }
+}
+
+export const addQuiz = async (req: TokenRequest, res: Response, next: NextFunction) => {
+    try {
+        const { topic, text, options, correctAnswer } = req.body;
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const errorArray = errors.array();
+            return next(new HttpError('Validation Error', errorArray[0].msg, 422));
+        };
+        const newQuestion = await Question.create({ text, options, correctAnswer, topic });
+        res.status(200).json({ message: 'Question Added' });
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to add question'))
     }
 }

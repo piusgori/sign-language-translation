@@ -22,4 +22,9 @@ mainRouter.post('/add-request', access_token_1.default, [
     (0, express_validator_1.body)('meaning').isLength({ min: 1 }).withMessage('Meaning is required'),
 ], main_1.addRequest);
 mainRouter.get('/notifications', access_token_1.default, main_1.notifications);
+mainRouter.get('/topics', access_token_1.default, main_1.topics);
+mainRouter.get('/single-topic', access_token_1.default, main_1.singleTopic);
+mainRouter.post('/learn-lesson', access_token_1.default, main_1.learnLesson);
+mainRouter.post('/answer-question', access_token_1.default, main_1.answerQuestion);
+mainRouter.post('/complete-topic', access_token_1.default, main_1.completeTopic);
 exports.default = mainRouter;

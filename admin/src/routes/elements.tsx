@@ -9,4 +9,6 @@ export const NotFoundPage = Loadable(lazy(() => import('../pages/NotFoundPage'))
 export const LoginPage = Loadable(lazy(() => import('../pages/auth/LoginPage')));
 
 export const AdminPage = Loadable(lazy(() => import('../pages/admin/AdminPage')));
+export const TopicsPage = Loadable(lazy(() => import('../pages/admin/TopicsPage')));
+export const SingleTopicPage = Loadable(lazy(() => import('../pages/admin/SingleTopicPage')));
 export const RequestsPage = Loadable(lazy(() => import('../pages/admin/RequestsPage')));

@@ -1,5 +1,5 @@
 import { Navigate, useRoutes } from "react-router-dom";
-import { AdminPage, LoginPage, NotFoundPage, RequestsPage } from "./elements";
+import { LoginPage, NotFoundPage, RequestsPage, SingleTopicPage, TopicsPage } from "./elements";
 import { useAuthContext } from "../auth/auth-context";
 import Preloader from "../components/preloader";
 import AuthGuard from "../auth/AuthGuard";
@@ -21,7 +21,9 @@ export default function Router () {
             path: 'admin',
             element: <AuthGuard><AdminLayout /></AuthGuard>,
             children: [
-                { element: <AdminPage />, index: true },
+                { element: <Navigate to='/admin/topics' />, index: true },
+                { path: 'topics', element: <TopicsPage /> },
+                { path: 'topic', element: <SingleTopicPage /> },
                 { path: 'requests', element: <RequestsPage /> },
             ]
         },

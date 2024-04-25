@@ -12,13 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.notifications = exports.addRequest = exports.learning = exports.sendMessage = exports.getChats = exports.searchUser = exports.main = void 0;
+exports.completeTopic = exports.answerQuestion = exports.learnLesson = exports.singleTopic = exports.topics = exports.notifications = exports.addRequest = exports.learning = exports.sendMessage = exports.getChats = exports.searchUser = exports.main = void 0;
 const http_error_1 = __importDefault(require("../models/http-error"));
 const user_1 = __importDefault(require("../models/user"));
 const chat_1 = __importDefault(require("../models/chat"));
 const item_1 = __importDefault(require("../models/item"));
 const express_validator_1 = require("express-validator");
 const notification_1 = __importDefault(require("../models/notification"));
+const topic_1 = __importDefault(require("../models/topic"));
+const question_1 = __importDefault(require("../models/question"));
+const lesson_1 = __importDefault(require("../models/lesson"));
 const main = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         res.status(200).json({ message: 'Sign language translation' });
@@ -152,3 +155,66 @@ const notifications = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.notifications = notifications;
+const topics = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const topics = yield topic_1.default.find().sort({ createdAt: -1 });
+        res.status(200).json({ message: 'Topics', topics });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to get topics'));
+    }
+});
+exports.topics = topics;
+const singleTopic = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { topicId } = req.query;
+        const topic = yield topic_1.default.findById(topicId);
+        if (!topic)
+            return next(new http_error_1.default('Topic Error', 'Topic Not Found', 404));
+        const questions = yield question_1.default.find({ topic: topicId });
+        const lessons = yield lesson_1.default.find({ topic: topicId });
+        res.status(200).json({ message: 'Single Topic', topic: Object.assign(Object.assign({}, topic === null || topic === void 0 ? void 0 : topic._doc), { questions, lessons }) });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to get topics'));
+    }
+});
+exports.singleTopic = singleTopic;
+const learnLesson = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { lessonId } = req.body;
+        yield lesson_1.default.updateOne({ _id: lessonId }, { $addToSet: { users: req.id } });
+        res.status(200).json({ message: 'Lesson Learnt' });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to learn lesson'));
+    }
+});
+exports.learnLesson = learnLesson;
+const answerQuestion = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { question, answer } = req.body;
+        yield question_1.default.updateOne({ _id: question }, { $addToSet: { answers: { user: req.id, answer } } });
+        res.status(200).json({ message: 'Question answered' });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to answer question'));
+    }
+});
+exports.answerQuestion = answerQuestion;
+const completeTopic = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { topic } = req.body;
+        yield topic_1.default.updateOne({ _id: topic }, { $addToSet: { users: req.id } });
+        res.status(200).json({ message: 'Topic completed' });
+    }
+    catch (err) {
+        console.log(err);
+        return next(new http_error_1.default('Unable to complete topics'));
+    }
+});
+exports.completeTopic = completeTopic;

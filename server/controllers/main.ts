@@ -6,6 +6,9 @@ import Chat from "../models/chat";
 import Item from "../models/item";
 import { validationResult } from "express-validator";
 import Notification from "../models/notification";
+import Topic from "../models/topic";
+import Question from "../models/question";
+import Lesson from "../models/lesson";
 
 export const main = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -127,5 +130,62 @@ export const notifications = async (req: TokenRequest, res: Response, next: Next
     } catch (err) {
         console.log(err);
         return next(new HttpError('Unable to get learning items'));
+    }
+}
+
+export const topics = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const topics = await Topic.find().sort({ createdAt: -1 });
+        res.status(200).json({ message: 'Topics', topics });
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to get topics'));
+    }
+}
+
+export const singleTopic = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { topicId } = req.query;
+        const topic: any = await Topic.findById(topicId);
+        if (!topic) return next(new HttpError('Topic Error', 'Topic Not Found', 404));
+        const questions = await Question.find({ topic: topicId });
+        const lessons = await Lesson.find({ topic: topicId });
+        res.status(200).json({ message: 'Single Topic', topic: { ...topic?._doc, questions, lessons } });
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to get topics'));
+    }
+}
+
+export const learnLesson = async (req: TokenRequest, res: Response, next: NextFunction) => {
+    try {
+        const { lessonId } = req.body;
+        await Lesson.updateOne({ _id: lessonId }, { $addToSet: { users: req.id } });
+        res.status(200).json({ message: 'Lesson Learnt' });
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to learn lesson'));
+    }
+}
+
+export const answerQuestion = async (req: TokenRequest, res: Response, next: NextFunction) => {
+    try {
+        const { question, answer } = req.body;
+        await Question.updateOne({ _id: question }, { $addToSet: { answers: { user: req.id, answer } } });
+        res.status(200).json({ message: 'Question answered' });
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to answer question'));
+    }
+}
+
+export const completeTopic = async (req: TokenRequest, res: Response, next: NextFunction) => {
+    try {
+        const { topic } = req.body;
+        await Topic.updateOne({ _id: topic }, { $addToSet: { users: req.id } });
+        res.status(200).json({ message: 'Topic completed' });
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Unable to complete topics'));
     }
 }
