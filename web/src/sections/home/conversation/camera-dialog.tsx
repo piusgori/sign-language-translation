@@ -1,4 +1,4 @@
-import { Alert, Button, Dialog, Stack, styled, Typography } from "@mui/material";
+import { Alert, Button, Dialog, IconButton, Stack, styled, Typography } from "@mui/material";
 import '@tensorflow/tfjs-backend-webgl';
 import * as handtrack from '@tensorflow-models/handpose';
 import { useSnackbar } from "notistack";
@@ -10,6 +10,8 @@ import { Signpass } from "../../../components/handimage";
 import Handsigns from "../../../components/handsigns";
 import { drawHand } from "../../../components/handposeutil";
 import { Image } from '@nextui-org/image';
+import { useAppContext } from "../../../services/app-context";
+import { Clear, Send } from "@mui/icons-material";
 
 interface CD {
     open: boolean;
@@ -52,7 +54,12 @@ const TextContainer = styled('div')(() => ({
   padding: '12px',
   borderRadius: '12px',
   textAlign: 'center',
-  backgroundColor: 'white'
+  backgroundColor: 'white',
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '20px',
+  alignItems: 'center',
+  justifyContent: 'space-between'
 }))
 
 const SignImage = styled(Image)(() => ({
@@ -62,6 +69,7 @@ const SignImage = styled(Image)(() => ({
 const CameraDialog = ({ closeDialog, open }: CD) => {
 
   const { enqueueSnackbar } = useSnackbar();
+  const { setMessageInput, sendMessage } = useAppContext();
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [text, setText] = useState<string>('');
@@ -194,6 +202,19 @@ const CameraDialog = ({ closeDialog, open }: CD) => {
     } 
   }
 
+  const clearHandler = () => {
+    setText(prev => prev.slice(0, prev.length - 1));
+  }
+
+  const sendHandler = () => {
+    sendMessage();
+    closeDialog();
+  }
+
+  useEffect(() => {
+    setMessageInput(text);
+  }, [text])
+
   useEffect(() => {
     loadModelHandler();
   }, [])
@@ -225,7 +246,13 @@ const CameraDialog = ({ closeDialog, open }: CD) => {
               {sign && <SignImage src={sign?.src} alt={sign?.alt} />}
             </Stack>
 
-            {text?.length > 0 && <TextContainer>{text}</TextContainer>}
+            {text?.length > 0 && <TextContainer>
+              <Typography>{text}</Typography>
+              <Stack gap={1} direction='row' alignItems='center'>
+                <IconButton onClick={clearHandler}><Clear /></IconButton>
+                <IconButton onClick={sendHandler}><Send /></IconButton>
+              </Stack>
+            </TextContainer>}
 
             <Stack>
               <InfoDiv>

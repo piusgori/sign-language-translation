@@ -22,7 +22,7 @@ interface ALD {
 const AddLessonDialog = ({ closeDialog, reloadHandler, open }: ALD) => {
 
     const { enqueueSnackbar } = useSnackbar();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, _] = useSearchParams();
     const topic = searchParams.get('topicId');
 
     const LessonSchema = Yup.object().shape({

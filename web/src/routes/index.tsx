@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useRoutes } from "react-router-dom";
-import { HomePage, LoginPage, NotFoundPage, ProfilePage, RegisterPage } from "./elements";
+import { HomePage, LearnPage, LoginPage, NotFoundPage, ProfilePage, RegisterPage, SingleTopicPage } from "./elements";
 import AuthGuard from "../auth/AuthGuard";
 import DashboardLayout from "../layouts/dashboard";
 
@@ -19,6 +19,8 @@ const Router = () => {
         children: [
             { element: <HomePage />, index: true },
             { path: 'profile', element: <ProfilePage /> },
+            { path: 'learn', element: <LearnPage /> },
+            { path: 'topic', element: <SingleTopicPage /> },
         ]
       },
       { path: '*', element: <NotFoundPage /> }

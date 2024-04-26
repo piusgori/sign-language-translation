@@ -12,3 +12,5 @@ export const RegisterPage = Loadable(lazy(() => import('../pages/auth/RegisterPa
 
 export const HomePage = Loadable(lazy(() => import('../pages/home')));
 export const ProfilePage = Loadable(lazy(() => import('../pages/home/profile')));
+export const LearnPage = Loadable(lazy(() => import('../pages/home/learn')));
+export const SingleTopicPage = Loadable(lazy(() => import('../pages/home/single-topic')));
